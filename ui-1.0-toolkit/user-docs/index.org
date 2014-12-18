@@ -1,0 +1,255 @@
+#+Title: UI 1.0 Toolkit
+#+Author: VLEAD
+#+Date:   [2014-09-18 Thursday]
+#+SETUPFILE: ./org-templates/level-0.org
+#+OPTIONS: ^:nil
+
+* Using UI 1.0 Toolkit
+  
+The UI Toolkit consists of the Virtual Labs User Interface Template
+version 1.0. The toolkit also contains helper scripts that extract the
+content of labs hosted in Collaborative Framework (Amrita format) to
+UI 1.0 Template. The objective of using UI 1.0 Toolkit is to
+standardize the formats of all labs according to the UI 1.0
+Template. The UI 1.0 Toolkit helps you achieve the following:
+
+- *Unified look and feel:* The UI 1.0 Toolkit offers a uniform user
+  interface for authoring and interacting with the virtual labs. It
+  also provides labs a simple and uniform web interface and a
+  homogeneous hosting framework.
+- *Coding standards:* The Toolkit ensures that lab developers follow
+  good programming practices to make the code of the labs efficient
+  and readable.
+- *Upgrading widgets and components:* The UI 1.0 template makes it
+  easy for lab developers to modify and update widgets and/or
+  components.
+- *Provision for better versions of template:* In future, if advanced
+  versions of the UI template are created, the lab developers can
+  transfer the lab content automatically as per the new versions.
+
+* How to Identify the Template of your Lab
+Before you start using the UI 1.0 Toolkit, you need to understand the
+structure of your lab. Your lab may be structured either in the
+Collaborative Framework (Amrita Format) or may be unstructured (does
+not follow the UI 1.0 Template).
+
+If your lab is structured in Collaborative Framework, your lab URL should
+contain the following fields sub, brch, sim and cnt. For example, the
+URL of the lab http://iitkgp.vlab.co.in/?sub=39&brch=124&sim=922&cnt=1
+is described as below:
+
+|---------------------------------------------------+----------------------------------------------------|
+| url format                                        | example                                            |
+|---------------------------------------------------+----------------------------------------------------|
+| sub=39(subjects or domains)                       | Electrical Engineering                             |
+|---------------------------------------------------+----------------------------------------------------|
+| brch=124(branch or lab)                           | Analog Signals, Network and Measurement Laboratory |
+|---------------------------------------------------+----------------------------------------------------|
+| sim=922(experiment)                               | Verification of Superposition Theorem              |
+|---------------------------------------------------+----------------------------------------------------|
+| cnt=1(the breakup of pages under each experiment) | Introduction, Aim, Theory etc                      |
+|---------------------------------------------------+----------------------------------------------------|
+
+If your lab does not follow this format, you can assume that your lab has an unstructured format.
+
+* How to Convert your Lab to the UI 1.0 Template
+
+As discussed above, the structure of your lab may be either in the
+Collaborative Framework (Amrita Format) or it may be
+unstructured. Depending on the current structure of your lab, you need
+to follow the steps below to convert your lab to UI 1.0 Template.
+ 
+** How to Convert Unstructured Labs to UI 1.0 Template and Validate the Conversion
+
+*** How to Convert Unstructured Labs to UI 1.0 Template
+
+Go to the directory ui-1.0-toolkit
+#+BEGIN_EXAMPLE  :
+cd ui-1.0-toolkit
+#+END_EXAMPLE
+
+Edit the file =./src/template/src/lab/exp1/content.html=. This
+file =content.html= contains the simple pendulum experiment by default.
+Follow the instructions below to convert one of your experiments to UI
+1.0 Template.
+
+#+BEGIN_EXAMPLE  :
+vim ./src/template/src/lab/exp1/content.html
+#+END_EXAMPLE
+
+
+*Step 1:* Mention the lab name under =header= and place your
+experiment name under =article= and replace the content accordingly in
+each =section= for Aim, Theory and Procedure. Add licensing details
+and acknowledgements in the footer section.
+
+Follow this step for all the experiments of your lab. 
+
+*Step 2:* Edit the file =./src/template/src/lab/content.html= to list
+all the experiment names. Give links to the listed experiment names.
+
+*** How to Validate the Conversion to UI 1.0 Template
+
+*Step 1:* Based on the operating system, the scripts will
+differ. Therefore, check the scripts being used. If the operating
+system used is "CentOS", use
+=./scripts/centos-scripts=. If the OS is Ubuntu, use
+=./scripts/ubuntu-scripts= scripts.
+
+*Step 2:* Copy all the contents of the =scripts= folder from the path
+above and paste inside =./src/template=.
+#+BEGIN_EXAMPLE :
+rsync -ravz ./scripts ./src/template/
+#+END_EXAMPLE
+
+*Step 3:* Edit the file =./src/template/scripts/dependencies.txt= and
+list out all the dependencies of the lab. You will need these
+dependencies later during the auto-deployment of the lab.
+
+*Step 4:* Change to scripts directory
+
+#+BEGIN_EXAMPLE  :
+cd ./src/template/scripts
+#+END_EXAMPLE
+
+
+*Step 5:* Give execute permissions to the =initialize.sh= script
+
+ #+BEGIN_EXAMPLE :
+chmod +x initialize.sh
+#+END_EXAMPLE
+
+
+*Step 6:* Execute =initialize.sh= script
+
+#+BEGIN_EXAMPLE :
+./initialize.sh
+#+END_EXAMPLE
+
+This will automatically install the dependencies and run the =make=
+file and generate the =build= folder and place =build= inside
+the Apache server.  It will automatically run and display the default
+experiment in the browser. If you get permissions denied error,
+try to run the same with sudo su (as a root). In case of proxy error,
+set proxy value in =ui-1.0-toolkit/src/template/scripts/config.sh=
+accordingly. Also, everytime you make change in =content.html=, you
+need to run =initialize.sh=.
+
+*Step 7:* Finally, click on the =simple pendulum= link to display your
+lab.
+
+** How to Convert Labs in Collaborative Framework (Amrita Format) to UI 1.0 Template
+To convert labs from the Collaborative Framework (Amrita Format) to UI
+1.0 Template, you can use the helper scripts in the UI toolkit. The helper
+scripts automate the process to a large extent and you can change the
+rest manually.
+
+*** Instructions for using scripts
+The following instructions will help port the content from the
+Collaborative Framework (Amrita Format) to the Blue-icon theme.
+
+*Step 1:* Change to the ui-kit directory
+
+#+BEGIN_EXAMPLE : 
+cd ui-1.0-toolkit/
+#+END_EXAMPLE
+
+
+*Step 2:* Create directory called =map=
+
+#+BEGIN_EXAMPLE :
+> mkdir map
+#+END_EXAMPLE
+
+
+*Step 3:* Change to map directory
+
+#+BEGIN_EXAMPLE :
+cd map
+#+END_EXAMPLE
+
+
+*Step 4:* To get the sources of your institute, run the wget command
+inside the same directory.
+
+Provide the url of your lab that you want to convert to UI 1.0 template from the Amrita format. 
+
+#+BEGIN_EXAMPLE :
+wget -r -e robots=off http://<url of your lab linked to vlab.co.in>
+#+END_EXAMPLE
+
+
+*Step 5:* Copy =organise.sh= from
+=../scripts/automated-scripts= and place
+it inside =map= directory.
+
+#+BEGIN_EXAMPLE :
+cp ../scripts/automated-scripts/organise.sh .
+#+END_EXAMPLE
+
+*Step 6:* Give execute permissions to organise.sh and run it
+
+#+BEGIN_EXAMPLE :
+chmod +x organise.sh
+./organise.sh
+#+END_EXAMPLE
+
+After execution, the directories are organized into folders with three
+hierarchies and random numbers as names of these folders. Usually
+first, second and third hierarchy levels represent disciplines, labs
+and experiments respectively of that particular institute.
+
+If you get an error that resembles =index*\?sub*=, then open
+=organise.sh= and replace the line 
+
+#+BEGIN_EXAMPLE :
+sublist=$(ls -1 index*\?sub* | cut -d'&' -f1 | cut -d'=' -f2 | sort -u)
+#+END_EXAMPLE
+
+with 
+#+BEGIN_EXAMPLE :
+sublist=$(ls -1 index*\_sub* | cut -d'&' -f1 | cut -d'=' -f2 | sort -u)
+#+END_EXAMPLE
+
+*Step 7:* Copy the =kit= folder from =../scripts/automated-scripts=
+and place inside each experiment folder.
+
+
+#+BEGIN_EXAMPLE :
+rsync -avzr ../scripts/automated-scripts/kit ./<discipline>/<lab>/<experiment>/
+#+END_EXAMPLE
+
+*Step 8:* After copying, change to =kit= in each experiment.
+#+BEGIN_EXAMPLE :
+cd ./<discipline>/<lab>/<experiment>/
+#+END_EXAMPLE
+
+*Step 9:* Execute =all.sh=
+
+#+BEGIN_EXAMPLE :
+./all.sh
+#+END_EXAMPLE
+This will open the experiment in the browser.
+
+*Step 10:* Click on the =simple pendulum= link to display your lab. 
+ 
+
+*Step 11:* Follow the same procedure for every experiment. After
+converting all the experiments, rename the folders experiment-wise
+such as: exp1, exp2, exp3 so on and place them inside the =lab=
+folder. Content will open in the browser with the simple pendulum
+sample experiment.  You need to change the experiment name and add
+acknowledgements in the footer section.
+
+* Conclusion
+After conversion, your lab:
+
+- should match the directory structure as below.
+
+[[./images/labs-structure.png]]
+
+- should have all the content and should resemble the page below.
+
+[[file:images/screenshot2.jpg]]  
+
+
